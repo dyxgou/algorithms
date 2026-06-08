@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log/slog"
 	"slices"
 )
 
@@ -26,14 +25,14 @@ func NewConn(src, dst int) Connection {
 }
 
 type Graph[T Stringable] struct {
-	nodes []*Node[T]
-	conns []Connection
+	nodes   []*Node[T]
+	visited []int
 }
 
 func New[T Stringable]() *Graph[T] {
 	return &Graph[T]{
-		nodes: make([]*Node[T], 0, 10),
-		conns: make([]Connection, 0, 10),
+		nodes:   make([]*Node[T], 0, 10),
+		visited: make([]int, 0, 10),
 	}
 }
 
@@ -63,7 +62,7 @@ func (g *Graph[T]) Connect(src *Node[T], dst *Node[T]) {
 }
 
 func (g *Graph[T]) IsConnected(src *Node[T], dst *Node[T]) bool {
-	if len(src.conns) == 0 {
+	if len(src.conns) == 0 || len(dst.conns) == 0 {
 		return false
 	}
 
@@ -72,18 +71,25 @@ func (g *Graph[T]) IsConnected(src *Node[T], dst *Node[T]) bool {
 	}
 
 	s := NewStack()
-	for _, conn := range src.conns {
-		s.Insert(conn)
-	}
+	g.visited = append(g.visited, src.index)
+	s.Insert(src.index)
 
 	for !s.IsEmpty() {
 		c := s.Pop()
-		slog.Info("conn popped", "c", c, "n", g.nodes[c])
 
 		conns := g.getNodeConns(c)
 
-		if slices.Contains(conns, dst.index) {
-			return true
+		for _, conn := range conns {
+			if slices.Contains(g.visited, conn) {
+				continue
+			}
+
+			if conn == dst.index {
+				return true
+			}
+
+			s.Insert(conn)
+			g.visited = append(g.visited, conn)
 		}
 	}
 

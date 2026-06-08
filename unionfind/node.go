@@ -31,8 +31,10 @@ func (n *Node[T]) String() string {
 	var sb strings.Builder
 
 	sb.WriteByte('{')
+	sb.WriteString("val=")
 	sb.WriteString(n.val.String())
 	sb.WriteByte(',')
+	sb.WriteString("idx=")
 	sb.WriteString(strconv.Itoa(n.index))
 	sb.WriteByte('}')
 

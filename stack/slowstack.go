@@ -1,8 +1,12 @@
-package main
+ackage main
+
+import "errors"
 
 type SlowStack[T any] struct {
 	vals []T
 }
+
+var EmptyStackErr = errors.New("Empty Stack")
 
 func NewSlowStack[T any]() *SlowStack[T] {
 	return &SlowStack[T]{
@@ -14,16 +18,12 @@ func (s *SlowStack[T]) Insert(val T) {
 	s.vals = append(s.vals, val)
 }
 
-func (s *SlowStack[T]) Pop() T {
-	if s.IsEmpty() {
-		panic("The stack is empty")
-	}
-
+func (s *SlowStack[T]) Pop() (T, error) {
 	v := s.vals[len(s.vals)-1]
 
 	s.vals = s.vals[:len(s.vals)-1]
 
-	return v
+	return v, nil
 }
 
 func (s *SlowStack[T]) IsEmpty() bool {

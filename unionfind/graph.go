@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"slices"
 )
 
@@ -24,12 +25,12 @@ func NewConn(src, dst int) Connection {
 	return Connection{src, dst}
 }
 
-type Graph[T Stringable] struct {
+type Graph[T fmt.Stringer] struct {
 	nodes   []*Node[T]
 	visited []int
 }
 
-func New[T Stringable]() *Graph[T] {
+func New[T fmt.Stringer]() *Graph[T] {
 	return &Graph[T]{
 		nodes:   make([]*Node[T], 0, 10),
 		visited: make([]int, 0, 10),

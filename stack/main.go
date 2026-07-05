@@ -1,7 +1,5 @@
 package main
 
-import "log/slog"
-
 func main() {
 	s := NewSlowStack[int]()
 
@@ -17,6 +15,4 @@ func main() {
 	s.Insert(10)
 	s.Insert(11)
 
-	v := s.Pop()
-	slog.Info("popped element", "v", v)
 }

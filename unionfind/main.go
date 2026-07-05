@@ -5,14 +5,14 @@ import (
 	"strconv"
 )
 
-type StringableInt int
+type StringerInt int
 
-func (i StringableInt) String() string {
+func (i StringerInt) String() string {
 	return strconv.Itoa(int(i))
 }
 
 func main() {
-	g := New[StringableInt]()
+	g := New[StringerInt]()
 
 	n1 := g.Insert(1)
 	n2 := g.Insert(2)

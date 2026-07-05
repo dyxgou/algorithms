@@ -1,21 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"strconv"
 	"strings"
 )
 
-type Stringable interface {
-	String() string
-}
-
-type Node[T Stringable] struct {
+type Node[T fmt.Stringer] struct {
 	val   T
 	index int
 	conns []int
 }
 
-func NewNode[T Stringable](val T, index int) *Node[T] {
+func NewNode[T fmt.Stringer](val T, index int) *Node[T] {
 	return &Node[T]{
 		val:   val,
 		index: index,

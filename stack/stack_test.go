@@ -1,50 +1,37 @@
 package main
 
 import (
+	"os"
 	"testing"
 )
 
-func BenchmarkPopFastStack(b *testing.B) {
-	b.Skip()
-	s := NewFastStack[int]()
-	for range b.N {
-		s.Insert(1)
-	}
-	b.ResetTimer()
+var s *SlowStack[int]
 
-	// for range b.N {
-	// 	s.Pop()
-	// }
+func TestMain(m *testing.M) {
+	s = NewSlowStack[int]()
+
+	code := m.Run()
+
+	os.Exit(code)
+}
+
+func BenchmarkPopFastStack(b *testing.B) {
+	b.SetParallelism(4)
 }
 
 func BenchmarkPopSlowStack(b *testing.B) {
-	b.Skip()
-	s := NewSlowStack[int]()
-	for range b.N {
-		s.Insert(1)
-	}
+	b.RunParallel(func(p *testing.PB) {
+		for p.Next() {
+			s.Insert(1)
+			s.Pop()
+		}
+	})
 
-	b.ResetTimer()
-
-	for range b.N {
-		s.Pop()
-	}
-}
-
-func BenchmarkInsertFastStack(b *testing.B) {
-	s := NewFastStack[int]()
-	b.ResetTimer()
-
-	for b.Loop() {
-		s.Insert(1)
-	}
-}
-
-func BenchmarkInsertSlowStack(b *testing.B) {
-	s := NewSlowStack[int]()
-	b.ResetTimer()
-
-	for b.Loop() {
-		s.Insert(1)
-	}
+	b.RunParallel(func(p *testing.PB) {
+		for p.Next() {
+			ss := NewFastStack[int]()
+			ss.Insert(1)
+			ss.Pop()
+		}
+	})
 }

@@ -23,15 +23,16 @@ func (s *FastStack[T]) Insert(val T) {
 	s.len++
 }
 
-func (s *FastStack[T]) Pop() T {
+func (s *FastStack[T]) Pop() (T, error) {
 	if s.IsEmpty() {
-		return s.vals[0]
+		var zero T
+		return zero, EmptyStackErr
 	}
 
 	v := s.vals[s.len-1]
 	s.len--
 
-	return v
+	return v, nil
 }
 
 func (s *FastStack[T]) Clear() {
